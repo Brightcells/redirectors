@@ -4,25 +4,33 @@ import hashlib
 import urllib
 
 
-class Redirector(object):
-    def egret(self, chanId=None, appKey=None, login_url=None, userid=None, username=None, avatar=None, sex=None):
-        sign_str = 'chanId={chanId}&userid={userid}&{appKey}'.format(
+class BaseRedirector(object):
+    def base_calculate_sign(self, signstr):
+        return hashlib.md5(signstr).hexdigest()
+
+
+class EgretRedirector(BaseRedirector):
+    def calculate_signature(self, chanId=None, appKey=None, userid=None):
+        signstr = 'chanId={chanId}&userid={userid}&{appKey}'.format(
             chanId=chanId,
             userid=userid,
             appKey=appKey
         )
-        sign = hashlib.md5(sign_str).hexdigest()
+        return self.base_calculate_sign(signstr)
+
+    def check_signature(self, chanId=None, appKey=None, userid=None, sign=None):
+        return self.calculate_signature(chanId=chanId, appKey=appKey, userid=userid) == sign
+
+    def login_url(self, chanId=None, appKey=None, login_url=None, userid=None, username=None, avatar=None, sex=None):
         params = {
             'userid': userid,
             'username': username,
             'avatar': avatar,
             'sex': sex,
             'chanId': chanId,
-            'sign': sign
+            'sign': self.calculate_signature(chanId=chanId, appKey=appKey, userid=userid)
         }
         return '{login_url}?{params}'.format(login_url=login_url, params=urllib.urlencode(params))
 
 
-_global_instance = Redirector()
-egret = _global_instance.egret
-compet = _global_instance.egret
+compet = egret = EgretRedirector()
