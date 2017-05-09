@@ -11,12 +11,14 @@ class BaseRedirector(object):
 
 
 class EgretRedirector(BaseRedirector):
-    def calculate_signature(self, chanId=None, appKey=None, userid=None):
+    def calculate_signature(self, chanId=None, appKey=None, userid=None, **kwargs):
         signstr = 'chanId={chanId}&userid={userid}&{appKey}'.format(
             chanId=chanId,
             userid=userid,
             appKey=appKey
         )
+        for k, v in kwargs:
+            signstr == '&{}={}'.format(k, v)
         return self.base_calculate_sign(signstr)
 
     def check_signature(self, chanId=None, appKey=None, userid=None, sign=None):
