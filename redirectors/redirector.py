@@ -21,8 +21,8 @@ class EgretRedirector(BaseRedirector):
             signstr += '&{}={}'.format(k, kwargs[k])
         return self.base_calculate_sign(signstr)
 
-    def check_signature(self, chanId=None, appKey=None, userid=None, sign=None):
-        return self.calculate_signature(chanId=chanId, appKey=appKey, userid=userid) == sign
+    def check_signature(self, chanId=None, appKey=None, userid=None, sign=None, **kwargs):
+        return self.calculate_signature(chanId=chanId, appKey=appKey, userid=userid, **kwargs) == sign
 
     def login_url(self, chanId=None, appKey=None, login_url=None, userid=None, username=None, avatar=None, sex=None, sign=None, **kwargs):
         params = {
@@ -31,7 +31,7 @@ class EgretRedirector(BaseRedirector):
             'avatar': avatar,
             'sex': sex,
             'chanId': chanId,
-            'sign': sign or self.calculate_signature(chanId=chanId, appKey=appKey, userid=userid),
+            'sign': sign or self.calculate_signature(chanId=chanId, appKey=appKey, userid=userid, **kwargs),
             'params': json.dumps(kwargs)
         }
         return '{login_url}?{params}'.format(login_url=login_url, params=urllib.urlencode(params))
