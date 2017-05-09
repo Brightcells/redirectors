@@ -26,14 +26,14 @@ class EgretRedirector(BaseRedirector):
     def check_signature(self, chanId=None, appKey=None, userid=None, sign=None):
         return self.calculate_signature(chanId=chanId, appKey=appKey, userid=userid) == sign
 
-    def login_url(self, chanId=None, appKey=None, login_url=None, userid=None, username=None, avatar=None, sex=None, **kwargs):
+    def login_url(self, chanId=None, appKey=None, login_url=None, userid=None, username=None, avatar=None, sex=None, sign=None, **kwargs):
         params = {
             'userid': userid,
             'username': username,
             'avatar': avatar,
             'sex': sex,
             'chanId': chanId,
-            'sign': self.calculate_signature(chanId=chanId, appKey=appKey, userid=userid),
+            'sign': sign or self.calculate_signature(chanId=chanId, appKey=appKey, userid=userid),
             'params': json.dumps(kwargs)
         }
         return '{login_url}?{params}'.format(login_url=login_url, params=urllib.urlencode(params))
