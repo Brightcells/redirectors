@@ -4,6 +4,8 @@ import hashlib
 import json
 import urllib
 
+from .compat import iteritems
+
 
 class BaseRedirector(object):
     def base_calculate_sign(self, signstr):
@@ -17,7 +19,7 @@ class EgretRedirector(BaseRedirector):
             userid=userid,
             appKey=appKey
         )
-        for k, v in kwargs:
+        for k, v in iteritems(kwargs):
             signstr == '&{}={}'.format(k, v)
         return self.base_calculate_sign(signstr)
 

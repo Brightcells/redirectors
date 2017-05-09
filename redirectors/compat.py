@@ -45,6 +45,9 @@ if is_py2:
     import __builtin__
     builtins = __builtin__
 
+    def iteritems(x):
+        return x.iteritems()
+
 elif is_py3:
     range = range
 
@@ -56,3 +59,6 @@ elif is_py3:
 
     import builtins
     builtins = builtins
+
+    def iteritems(x):
+        return iter(x.items())
