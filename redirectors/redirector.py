@@ -21,6 +21,14 @@ class EgretRedirector(BaseRedirector):
             signstr += '&{0}={1}'.format(k, kwargs[k])
         return self.base_calculate_sign(signstr)
 
+    def fill_signature(self, chanId=None, appKey=None, userid=None, sign=None, **kwargs):
+        sign = self.calculate_signature(chanId=chanId, appKey=appKey, userid=userid, **kwargs)
+        return dict(kwargs, **{
+            'chanId': chanId,
+            'userid': userid,
+            'sign': sign,
+        })
+
     def check_signature(self, chanId=None, appKey=None, userid=None, sign=None, **kwargs):
         return self.calculate_signature(chanId=chanId, appKey=appKey, userid=userid, **kwargs) == sign
 
